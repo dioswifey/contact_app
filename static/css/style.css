@@ -423,7 +423,8 @@ code { font-family: var(--font-mono); }
   padding: 0;
 }
 
-.auth-modal--active .login-bg-video {
+/* Show video when login modal is active */
+.page[data-auth="false"] .login-bg-video {
   display: block;
 }
 
