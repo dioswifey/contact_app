@@ -4,10 +4,29 @@
 Coordinates the 4 sub-agents and synthesizes their findings into one actionable report.
 
 ## Sub-agents
-1. **Backend Agent** — API endpoints, CRUD logic, security
-2. **Frontend Agent** — UI/UX, forms, accessibility  
-3. **Infrastructure Agent** — Database schema, models, security
-4. **Testing Agent** — Test strategy, E2E scenarios with Playwright
+
+Each agent has a dedicated configuration file:
+
+1. **Backend Agent**
+   - Config: `agents/backend_agent/config.md`
+   - Scope: API endpoints, CRUD logic, security
+   - Files analyzed: routers/, crud.py, schemas.py, security.py
+
+2. **Frontend Agent**
+   - Config: `agents/frontend_agent/config.md`
+   - Scope: UI/UX, forms, accessibility
+   - Files analyzed: static/index.html, static/js/app.js, static/css/style.css
+
+3. **Infrastructure Agent**
+   - Config: `agents/infrastructure_agent/config.md`
+   - Scope: Database schema, models, security
+   - Files analyzed: models.py, database.py, schemas.py, security.py
+
+4. **Testing Agent**
+   - Config: `agents/testing_agent/config.md`
+   - Scope: Test strategy, E2E scenarios, Playwright MCP integration
+   - Files analyzed: All project files for test coverage gaps
+   - Playwright MCP: Configured in `.mcp.json` and `.claude/settings.json`
 
 ## Orchestration Flow
 
