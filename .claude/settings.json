@@ -1,0 +1,17 @@
+{
+  "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": [
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(curl -s http://localhost:8000/)",
+      "Skill(run)",
+      "Bash(python *)",
+      "Bash(curl -s http://127.0.0.1:8000/)",
+      "Bash(curl -s http://127.0.0.1:8000/static/css/style.css)",
+      "Bash(pkill *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(curl -s http://127.0.0.1:8000/static/js/app.js)",
+      "Bash(curl -v http://127.0.0.1:8000/)"
+    ]
+  }
+}
