@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>연락처 관리 서비스</title>
+<title>Contact Manager</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/static/css/style.css" />
@@ -11,10 +11,10 @@
 <body>
 
   <header class="topbar" data-auth="false">
-    <h1 class="topbar__title">연락처 관리 서비스</h1>
+    <h1 class="topbar__title">Contact Manager</h1>
     <div class="topbar__user" id="user-box" hidden>
-      <span><strong id="username-label"></strong> 님</span>
-      <button type="button" class="pill-btn pill-btn--blue" id="logout-btn">로그아웃</button>
+      <span>Welcome, <strong id="username-label"></strong></span>
+      <button type="button" class="pill-btn pill-btn--blue" id="logout-btn">Logout</button>
     </div>
   </header>
 
@@ -25,25 +25,35 @@
       <source src="/static/make_the_10_seconds_video__Seedance_15_Pro_35558.mp4" type="video/mp4">
     </video>
 
-    <!-- SCR-001 : 로그인 / 회원가입 (Modal) -->
+    <!-- SCR-001 : Login / Sign Up (Modal) -->
     <div id="auth-modal" class="auth-modal auth-modal--active">
       <section id="auth-section" class="auth-wrap">
         <div class="panel panel--navy auth-card">
-          <h2 class="panel__title">로그인 / 회원가입</h2>
+          <!-- Window Title Bar -->
+          <div class="auth-window-header">
+            <div class="auth-window-icons">
+              <span class="pixel-heart">♥</span>
+              <span class="pixel-heart">♥</span>
+            </div>
+            <div class="auth-window-title">Login / Sign Up</div>
+            <button type="button" class="auth-window-close" aria-label="Close">✕</button>
+          </div>
+
+          <h2 class="panel__title auth-title">Login / Sign Up</h2>
 
         <form id="login-form" class="stack-form" novalidate>
           <label class="field">
-            <span class="field__label">아이디</span>
-            <input type="text" name="username" placeholder="영문 소문자·숫자 4~20자" autocomplete="username" required />
+            <span class="field__label">Username</span>
+            <input type="text" name="username" placeholder="username" autocomplete="username" required />
           </label>
           <label class="field">
-            <span class="field__label">비밀번호</span>
-            <input type="password" name="password" placeholder="4~20자" autocomplete="current-password" required />
+            <span class="field__label">Password</span>
+            <input type="password" name="password" placeholder="password" autocomplete="current-password" required />
           </label>
 
           <div class="auth-card__actions">
-            <button type="submit" class="btn btn--navy" id="login-btn">로그인</button>
-            <button type="button" class="btn btn--outline-navy" id="signup-btn">회원가입</button>
+            <button type="submit" class="btn btn--navy" id="login-btn">Log In</button>
+            <button type="button" class="btn btn--outline-navy" id="signup-btn">Sign Up</button>
           </div>
         </form>
 
@@ -57,67 +67,69 @@
 
       <div class="col-left">
 
-        <!-- 연락처 추가 -->
+        <!-- Add Contact -->
         <div class="panel panel--purple">
-          <h2 class="panel__title">연락처 추가 <code class="panel__api">(POST /contacts)</code></h2>
+          <h2 class="panel__title">Add Contact <code class="panel__api">(POST /contacts)</code></h2>
 
           <form id="contact-form" class="contact-form">
             <div class="contact-form__row1">
-              <input class="cf cf--name" type="text" name="name" placeholder="이름 (1~5자)" maxlength="5" required />
+              <input class="cf cf--name" type="text" name="name" placeholder="Name (1-5 chars)" maxlength="5" required />
               <input class="cf cf--phone" type="text" name="phone" placeholder="01012345678" pattern="^010\d{8}$" required />
-              <input class="cf cf--addr" type="text" name="addr" placeholder="주소" />
-              <button type="submit" class="btn btn--navy btn--submit" id="contact-submit-btn">추가</button>
             </div>
             <div class="contact-form__row2">
+              <input class="cf cf--addr" type="text" name="addr" placeholder="Address" />
+            </div>
+            <div class="contact-form__row3">
               <select class="cf cf--select" name="category_id" id="category-select" required>
-                <option value="">종류 ▼ (드롭다운)</option>
+                <option value="">Category ▼ (Dropdown)</option>
               </select>
+              <button type="submit" class="btn btn--navy btn--submit" id="contact-submit-btn">Add</button>
             </div>
             <div class="contact-form__meta">
-              <span id="contact-form-title">새 연락처 입력 중</span>
-              <button type="button" class="link-btn" id="contact-cancel-btn" hidden>편집 취소</button>
+              <span id="contact-form-title">Entering new contact</span>
+              <button type="button" class="link-btn" id="contact-cancel-btn" hidden>Cancel Edit</button>
             </div>
           </form>
         </div>
 
-        <!-- 검색 -->
+        <!-- Search -->
         <div class="panel panel--teal search-panel">
-          <input type="search" id="search-input" placeholder="이름으로 검색 (예: 윤아)" />
-          <button type="button" class="btn btn--teal" id="search-btn">검색 / 전체</button>
+          <input type="search" id="search-input" placeholder="Search by name (e.g., John)" />
+          <button type="button" class="btn btn--teal" id="search-btn">Search / All</button>
         </div>
 
-        <!-- 연락처 목록 -->
+        <!-- Contact List -->
         <div class="panel panel--blue">
-          <h2 class="panel__title">연락처 목록 &mdash; <span id="contact-count">총 0건</span>
-            <code class="panel__api">(GET /contacts 의 total)</code>
+          <h2 class="panel__title">Contact List &mdash; <span id="contact-count">Total 0</span>
+            <code class="panel__api">(GET /contacts total)</code>
           </h2>
 
           <ul class="row-list" id="contact-list" aria-live="polite"></ul>
-          <p class="empty-note" id="empty-state" hidden>저장된 연락처가 없습니다.</p>
+          <p class="empty-note" id="empty-state" hidden>No saved contacts.</p>
 
-          <p class="panel__footnote">※ 동명이인은 각 행이 자기 id를 갖고 있어, 버튼만 누르면 정확한 대상이 지정됩니다.</p>
+          <p class="panel__footnote">※ Each contact has a unique ID, so you can edit or delete specific contacts with precision.</p>
         </div>
       </div>
 
-      <!-- SCR-003 : 카테고리 관리 -->
+      <!-- Category Management -->
       <aside class="col-right">
         <div class="panel panel--green">
-          <h2 class="panel__title">카테고리 관리 <span class="scr-tag">SCR-003</span></h2>
+          <h2 class="panel__title">Manage Categories <span class="scr-tag">SCR-003</span></h2>
 
           <ul class="row-list row-list--category" id="category-list"></ul>
 
           <form id="category-form" class="category-add">
-            <input type="text" name="name" placeholder="새 카테고리 (1~10자)" maxlength="10" required />
-            <button type="submit" class="btn btn--green btn--sm">추가</button>
+            <input type="text" name="name" placeholder="New Category (1-10 chars)" maxlength="10" required />
+            <button type="submit" class="btn btn--green btn--sm">Add</button>
           </form>
 
-          <p class="panel__footnote">※ 카테고리가 바뀌면 왼쪽 추가 폼의 드롭다운도 갱신됩니다.</p>
+          <p class="panel__footnote">※ The category dropdown on the left will update automatically when you add a new category.</p>
         </div>
       </aside>
     </section>
 
     <!-- SCR-900 : 공통 메시지 영역 -->
-    <div class="message-bar" id="toast" role="status" aria-live="polite">
+    <div class="message-bar" id="toast" role="status" aria-live="polite" hidden>
       <span class="message-bar__arrow">▼</span>
       <span class="message-bar__text" id="message-bar-text">화면 하단 공통 메시지 영역 — 성공/오류 안내가 여기 표시됩니다</span>
     </div>

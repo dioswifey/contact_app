@@ -2,7 +2,7 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["@anthropic-ai/playwright-mcp"],
+      "args": ["@playwright/mcp"],
       "description": "Playwright MCP server for browser automation and E2E testing"
     }
   }

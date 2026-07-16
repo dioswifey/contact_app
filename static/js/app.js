@@ -35,14 +35,16 @@ const messageBarText = document.getElementById("message-bar-text");
 
 let editingContactId = null; // null = 추가 모드
 
-// ── SCR-900 공통 메시지 바 ─────────────────────────────
+// ── SCR-900 Common message bar ─────────────────────────────
 function showMessage(text, kind = "info") {
+  messageBar.hidden = false;
   messageBarText.textContent = text;
   messageBar.classList.remove("is-success", "is-error", "is-info");
   messageBar.classList.add(kind === "error" ? "is-error" : kind === "success" ? "is-success" : "is-info");
   clearTimeout(showMessage._t);
   showMessage._t = setTimeout(() => {
-    messageBarText.textContent = "화면 하단 공통 메시지 영역 — 성공/오류 안내가 여기 표시됩니다";
+    messageBar.hidden = true;
+    messageBarText.textContent = "Common notification area — Success/Error messages will appear here";
     messageBar.classList.remove("is-success", "is-error", "is-info");
   }, 3200);
 }
@@ -63,7 +65,7 @@ async function api(path, options = {}) {
   if (!res.ok) {
     if (res.status === 401) {
       showAuthSection();
-      showMessage("세션이 만료되었어요. 다시 로그인해 주세요.", "error");
+      showMessage("Session expired. Please log in again.", "error");
     } else {
       showMessage(extractDetail(body), "error");
     }
@@ -73,9 +75,9 @@ async function api(path, options = {}) {
 }
 
 function extractDetail(body) {
-  if (!body) return "요청을 처리하지 못했습니다.";
-  if (Array.isArray(body.detail)) return body.detail[0]?.msg || "입력값을 확인해 주세요.";
-  return body.detail || "요청을 처리하지 못했습니다.";
+  if (!body) return "Failed to process request.";
+  if (Array.isArray(body.detail)) return body.detail[0]?.msg || "Please check your input.";
+  return body.detail || "Failed to process request.";
 }
 
 function escapeHtml(str) {
@@ -140,7 +142,7 @@ signupBtn.addEventListener("click", async () => {
   signupBtn.disabled = true;
   try {
     await api("/auth/signup", { method: "POST", body: JSON.stringify(data) });
-    authMessage.textContent = "가입 완료! 로그인해 주세요.";
+    authMessage.textContent = "Sign up complete! Please log in.";
     authMessage.classList.add("is-success");
   } catch (err) {
     authMessage.textContent = err.message;
@@ -170,8 +172,8 @@ function renderCategoryRows(categories) {
     li.innerHTML = `
       <span class="row-item__info"><span class="row-item__name">${escapeHtml(cat.name)}</span></span>
       <span class="row-item__ops">
-        <button type="button" class="row-btn row-btn--edit" data-op="rename">수정</button>
-        <button type="button" class="row-btn row-btn--delete" data-op="delete">삭제</button>
+        <button type="button" class="row-btn row-btn--edit" data-op="rename">Edit</button>
+        <button type="button" class="row-btn row-btn--delete" data-op="delete">Delete</button>
       </span>
     `;
     li.querySelector('[data-op="rename"]').addEventListener("click", () => renameCategory(cat));
@@ -182,7 +184,7 @@ function renderCategoryRows(categories) {
 
 function renderCategorySelect(categories) {
   const prev = categorySelect.value;
-  categorySelect.innerHTML = '<option value="">종류 ▼ (드롭다운)</option>';
+  categorySelect.innerHTML = '<option value="">Category ▼ (Dropdown)</option>';
   categories.forEach((cat) => {
     const opt = document.createElement("option");
     opt.value = cat.id;
@@ -217,11 +219,11 @@ async function renameCategory(cat) {
 }
 
 async function deleteCategory(cat) {
-  if (!confirm(`"${cat.name}" 카테고리를 삭제할까요?`)) return;
+  if (!confirm(`Delete "${cat.name}" category?`)) return;
   try {
     await api(`/categories/${cat.id}`, { method: "DELETE" });
     await loadCategories();
-    showMessage("카테고리가 삭제되었습니다.", "success");
+    showMessage("Category deleted.", "success");
   } catch (_) { /* 409 등은 api()가 메시지로 안내 */ }
 }
 
@@ -272,10 +274,10 @@ contactForm.addEventListener("submit", async (e) => {
   try {
     if (editingContactId) {
       await api(`/contacts/${editingContactId}`, { method: "PATCH", body: JSON.stringify(data) });
-      showMessage("연락처가 수정되었습니다.", "success");
+      showMessage("Contact updated.", "success");
     } else {
       await api("/contacts", { method: "POST", body: JSON.stringify(data) });
-      showMessage("연락처가 추가되었습니다.", "success");
+      showMessage("Contact added.", "success");
     }
     endEdit();
     await loadContacts(searchInput.value.trim() || undefined);
@@ -293,8 +295,8 @@ function startEdit(contact) {
   contactForm.addr.value = contact.addr || "";
   categorySelect.value = contact.category_id;
 
-  contactFormTitle.textContent = `"${contact.name}" 편집 중`;
-  contactSubmitBtn.textContent = "저장";
+  contactFormTitle.textContent = `Editing "${contact.name}"`;
+  contactSubmitBtn.textContent = "Save";
   contactCancelBtn.hidden = false;
   contactForm.scrollIntoView({ behavior: "smooth", block: "center" });
 }
@@ -302,18 +304,18 @@ function startEdit(contact) {
 function endEdit() {
   editingContactId = null;
   contactForm.reset();
-  contactFormTitle.textContent = "새 연락처 입력 중";
-  contactSubmitBtn.textContent = "추가";
+  contactFormTitle.textContent = "Entering new contact";
+  contactSubmitBtn.textContent = "Add";
   contactCancelBtn.hidden = true;
 }
 
 contactCancelBtn.addEventListener("click", endEdit);
 
 async function removeContact(contact) {
-  if (!confirm(`"${contact.name}" 연락처를 삭제할까요?`)) return;
+  if (!confirm(`Delete contact "${contact.name}"?`)) return;
   try {
     await api(`/contacts/${contact.id}`, { method: "DELETE" });
-    showMessage("연락처가 삭제되었습니다.", "success");
+    showMessage("Contact deleted.", "success");
     await loadContacts(searchInput.value.trim() || undefined);
   } catch (_) { /* 무시 */ }
 }
