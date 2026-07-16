@@ -59,3 +59,7 @@ htmlcov/
 *.tmp
 *.temp
 *.log
+
+# Claude Code session artifacts
+.claude/memory/
+.playwright-mcp/
