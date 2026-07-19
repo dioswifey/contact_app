@@ -407,6 +407,7 @@ code { font-family: var(--font-mono); }
   text-shadow: 1px 1px 0 rgba(199, 76, 120, 0.15);
   white-space: nowrap;
   overflow: hidden;
+  line-height: 1;
 }
 .corner-heart {
   position: absolute;
