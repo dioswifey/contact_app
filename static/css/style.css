@@ -446,7 +446,8 @@ code { font-family: var(--font-mono); }
 }
 .auth-card .auth-title {
   margin-top: 0;
-  padding-top: 32px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .stack-form {
   display: flex;
