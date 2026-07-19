@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 # ── 인증 ──────────────────────────────────────────────
 class SignupIn(BaseModel):
-    username: str = Field(pattern=r"^[a-z0-9]+$", min_length=4, max_length=20)
+    username: str = Field(pattern=r"^[A-Za-z][A-Za-z0-9_-]{2,29}$", min_length=3, max_length=30)
     password: str = Field(min_length=4, max_length=20)
 
 
