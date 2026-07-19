@@ -13,7 +13,7 @@ import models
 import schemas
 from security import hash_password, verify_password
 
-DEFAULT_CATEGORIES = ["가족", "친구", "기타"]
+DEFAULT_CATEGORIES = ["Family", "Friends", "Other"]
 
 
 # ── 인증 ──────────────────────────────────────────────
