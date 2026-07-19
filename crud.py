@@ -126,7 +126,8 @@ def list_contacts(
 ) -> list[schemas.ContactOut]:
     stmt = select(models.Contact).where(models.Contact.user_id == user_id)
     if name:
-        stmt = stmt.where(models.Contact.name == name)
+        escaped = name.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        stmt = stmt.where(models.Contact.name.ilike(f"%{escaped}%", escape="\\"))
     if category_id:
         stmt = stmt.where(models.Contact.category_id == category_id)
     stmt = stmt.order_by(models.Contact.id)

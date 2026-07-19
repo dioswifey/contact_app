@@ -236,7 +236,7 @@ async function loadContacts(name) {
 }
 
 function renderContacts({ total, items }) {
-  contactCount.textContent = `총 ${total}건`;
+  contactCount.textContent = `${total} people saved`;
   contactListEl.innerHTML = "";
   emptyState.hidden = total > 0;
 
@@ -253,8 +253,8 @@ function renderContacts({ total, items }) {
         <span class="row-item__type">${escapeHtml(contact.category_name)}</span>
       </span>
       <span class="row-item__ops">
-        <button type="button" class="row-btn row-btn--edit" data-op="edit">수정</button>
-        <button type="button" class="row-btn row-btn--delete" data-op="delete">삭제</button>
+        <button type="button" class="row-btn row-btn--edit" data-op="edit">Edit</button>
+        <button type="button" class="row-btn row-btn--delete" data-op="delete">Delete</button>
       </span>
     `;
     li.querySelector('[data-op="edit"]').addEventListener("click", () => startEdit(contact));
