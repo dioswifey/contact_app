@@ -264,22 +264,48 @@ function renderContacts({ total, items }) {
 }
 
 // ── 추가 / 수정 폼 ─────────────────────────────────────
+let announceTimer1 = null;
+let announceTimer2 = null;
+
+function clearAnnounceTimers() {
+  clearTimeout(announceTimer1);
+  clearTimeout(announceTimer2);
+}
+
+function updateFormStatusFromInputs() {
+  if (editingContactId) return;
+  clearAnnounceTimers();
+  contactFormTitle.classList.remove("is-fading");
+  const hasContent = Array.from(contactForm.elements).some((el) => {
+    if (el.tagName === "SELECT") return el.value !== "";
+    if (el.tagName === "INPUT") return el.value.trim() !== "";
+    return false;
+  });
+  contactFormTitle.textContent = hasContent ? "Press add button to register new contact" : "";
+}
+
+contactForm.addEventListener("input", updateFormStatusFromInputs);
+contactForm.addEventListener("change", updateFormStatusFromInputs);
+
 contactForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(contactForm));
   data.category_id = Number(data.category_id);
   if (!data.addr) delete data.addr;
 
+  const wasEditing = Boolean(editingContactId);
   contactSubmitBtn.disabled = true;
   try {
-    if (editingContactId) {
+    if (wasEditing) {
       await api(`/contacts/${editingContactId}`, { method: "PATCH", body: JSON.stringify(data) });
       showMessage("Contact updated.", "success");
+      endEdit();
     } else {
       await api("/contacts", { method: "POST", body: JSON.stringify(data) });
       showMessage("Contact added.", "success");
+      endEdit();
+      announceContactAdded();
     }
-    endEdit();
     await loadContacts(searchInput.value.trim() || undefined);
   } catch (_) {
     /* 실패 시 입력값 유지 — 안내는 api()에서 처리 */
@@ -288,6 +314,19 @@ contactForm.addEventListener("submit", async (e) => {
   }
 });
 
+function announceContactAdded() {
+  clearAnnounceTimers();
+  contactFormTitle.classList.remove("is-fading");
+  contactFormTitle.textContent = "New contact is registered, now check Contact List!";
+  announceTimer1 = setTimeout(() => {
+    contactFormTitle.classList.add("is-fading");
+  }, 3000);
+  announceTimer2 = setTimeout(() => {
+    contactFormTitle.textContent = "";
+    contactFormTitle.classList.remove("is-fading");
+  }, 3600);
+}
+
 function startEdit(contact) {
   editingContactId = contact.id;
   contactForm.name.value = contact.name;
@@ -295,6 +334,8 @@ function startEdit(contact) {
   contactForm.addr.value = contact.addr || "";
   categorySelect.value = contact.category_id;
 
+  clearAnnounceTimers();
+  contactFormTitle.classList.remove("is-fading");
   contactFormTitle.textContent = `Editing "${contact.name}"`;
   contactSubmitBtn.textContent = "Save";
   contactCancelBtn.hidden = false;
@@ -304,7 +345,9 @@ function startEdit(contact) {
 function endEdit() {
   editingContactId = null;
   contactForm.reset();
-  contactFormTitle.textContent = "Entering new contact";
+  clearAnnounceTimers();
+  contactFormTitle.classList.remove("is-fading");
+  contactFormTitle.textContent = "";
   contactSubmitBtn.textContent = "Add";
   contactCancelBtn.hidden = true;
 }
