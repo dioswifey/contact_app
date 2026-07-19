@@ -69,7 +69,7 @@ async function api(path, options = {}) {
     } else {
       showMessage(extractDetail(body), "error");
     }
-    throw new Error(body?.detail ? String(body.detail) : `HTTP ${res.status}`);
+    throw new Error(body ? extractDetail(body) : `HTTP ${res.status}`);
   }
   return body;
 }
