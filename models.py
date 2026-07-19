@@ -39,7 +39,7 @@ class Category(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    name: Mapped[str] = mapped_column(String(10), nullable=False)
+    name: Mapped[str] = mapped_column(String(30), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="categories")
     contacts: Mapped[list["Contact"]] = relationship(back_populates="category")
@@ -51,8 +51,8 @@ class Contact(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    name: Mapped[str] = mapped_column(String(5), nullable=False)
-    phone: Mapped[str] = mapped_column(String(11), nullable=False)
+    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    phone: Mapped[str] = mapped_column(String(20), nullable=False)
     addr: Mapped[str | None] = mapped_column(String(255), nullable=True)
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), nullable=False)
 

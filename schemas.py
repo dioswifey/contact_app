@@ -24,11 +24,11 @@ class UserOut(BaseModel):
 
 # ── 카테고리 ──────────────────────────────────────────
 class CategoryCreate(BaseModel):
-    name: str = Field(min_length=1, max_length=10)
+    name: str = Field(min_length=1, max_length=30)
 
 
 class CategoryUpdate(BaseModel):
-    name: str = Field(min_length=1, max_length=10)
+    name: str = Field(min_length=1, max_length=30)
 
 
 class CategoryOut(BaseModel):
@@ -39,15 +39,15 @@ class CategoryOut(BaseModel):
 
 # ── 연락처 ────────────────────────────────────────────
 class ContactCreate(BaseModel):
-    name: str = Field(min_length=1, max_length=5)
-    phone: str = Field(pattern=r"^010\d{8}$")
+    name: str = Field(min_length=1, max_length=50)
+    phone: str = Field(min_length=1, max_length=20, pattern=r"^[0-9+\-\s()]+$")
     addr: str | None = None
     category_id: int
 
 
 class ContactUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=5)
-    phone: str | None = Field(default=None, pattern=r"^010\d{8}$")
+    name: str | None = Field(default=None, min_length=1, max_length=50)
+    phone: str | None = Field(default=None, min_length=1, max_length=20, pattern=r"^[0-9+\-\s()]+$")
     addr: str | None = None
     category_id: int | None = None
 

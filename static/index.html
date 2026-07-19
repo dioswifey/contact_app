@@ -72,8 +72,8 @@
 
           <form id="contact-form" class="contact-form">
             <div class="contact-form__row1">
-              <input class="cf cf--name" type="text" name="name" placeholder="Name (1-5 chars)" maxlength="5" required />
-              <input class="cf cf--phone" type="text" name="phone" placeholder="01012345678" pattern="^010\d{8}$" required />
+              <input class="cf cf--name" type="text" name="name" placeholder="Name (1-50 chars)" maxlength="50" required />
+              <input class="cf cf--phone" type="text" name="phone" placeholder="Phone number" maxlength="20" required />
             </div>
             <div class="contact-form__row2">
               <input class="cf cf--addr" type="text" name="addr" placeholder="Address" />
@@ -118,7 +118,7 @@
           <ul class="row-list row-list--category" id="category-list"></ul>
 
           <form id="category-form" class="category-add">
-            <input type="text" name="name" placeholder="New Category (1-10 chars)" maxlength="10" required />
+            <input type="text" name="name" placeholder="New Category (1-30 chars)" maxlength="30" required />
             <button type="submit" class="btn btn--green btn--sm">Add</button>
           </form>
 
